@@ -4,9 +4,6 @@ import { connectToDB } from "./utils";
 import Employer from "@/models/Employer";
 import { redirect } from "next/navigation";
 import Employee from "@/models/Employee";
-import path from "path";
-import fs, { appendFile } from "fs/promises";
-import { v4 as uuidv4 } from "uuid";
 import { signIn } from "@/auth";
 import { signOut } from "@/auth";
 import { AuthError } from "next-auth";
@@ -166,6 +163,8 @@ export const addEmployee = async (formData: FormData) => {
     console.error("Error creating employee:", err);
     throw new Error("Failed to create employee!");
   }
+  revalidatePath("/dashboard/employees");
+  redirect("/dashboard/employees");
 };
 
 export async function updateEmployee(formData: FormData) {
@@ -204,45 +203,25 @@ export async function updateEmployee(formData: FormData) {
     console.error("Failed to update employee:", error);
     console.log({ success: false, error: "Failed to update employee" });
   }
+  revalidatePath("/dashboard/employees");
+  redirect(`/dashboard/employees/${id}`);
 }
 
 export const deleteEmployee = async (formData: FormData) => {
   try {
-    // Extract employeeId from FormData
     const employeeId = formData.get("employeeId") as string;
-    console.log(employeeId);
+    console.log("Employee ID:", employeeId);
 
-    // Connect to the database
     await connectToDB();
     console.log("DB Connected");
 
-    // Proceed as before...
-    // Find the employee by ID
     const employee = await Employee.findById(employeeId);
-    console.log(employee);
-
     if (!employee) {
       throw new Error("Employee not found");
     }
 
-    // If the employee has a photo, delete it from the filesystem
-    if (employee.photo) {
-      const absolutePath = path.join(process.cwd(), "public", employee.photo);
-      try {
-        await fs.unlink(absolutePath);
-        console.log("Employee photo deleted:", absolutePath);
-      } catch (fileErr) {
-        console.error("Error deleting employee photo:", fileErr);
-        // Optionally handle file deletion error
-      }
-    }
-
-    // Delete the employee from the database
     await Employee.findByIdAndDelete(employeeId);
-
-    console.log("Employee deleted successfully:", employee);
-
-    // Revalidate and redirect
+    console.log("Employee deleted successfully:", employeeId);
   } catch (err) {
     console.error("Error deleting employee:", err);
   }
