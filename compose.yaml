@@ -1,0 +1,41 @@
+services:
+  frontend:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - 3000:3000
+
+    environment:
+      # - MONGO=mongodb+srv://hunctasci:9TVlJ53xhc9IJ7RM@cluster0.gcoe0.mongodb.net/dashboard?retryWrites=true&w=majority&appName=Cluster0
+      - MONGO=mongodb://db:27017/dashboard
+      - AUTH_SECRET=DxV1cpZMU8fY0TDQ/SyuNAauSMHzVo3a000fe+gD2RI=
+      - AUTH_URL=http://localhost:3000/api/auth
+
+    develop:
+      watch:
+        - path: ./package.json
+          action: rebuild
+        - path: ./next.config.js
+          action: rebuild
+        - path: ./package-lock.json
+          action: rebuild
+        - path: .
+          target: /app
+          action: sync
+    volumes:
+      - uploads:/app/public/uploads
+
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - database:/data/db
+
+volumes:
+  database:
+  uploads:
