@@ -48,8 +48,10 @@ export const fetchEmployeeById = async (id: string) => {
     }
 
     // Convert the photo Buffer to a base64 string if it exists
+    // @ts-expect-error error
     if (employee.photo) {
-      employee.photo = employee.photo.toString('base64'); // Convert to base64
+      // @ts-expect-error error
+      employee.photo = employee.photo.toString("base64"); // Convert to base64
     }
 
     return JSON.parse(JSON.stringify(employee)); // Convert to plain JavaScript object

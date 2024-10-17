@@ -51,7 +51,10 @@ export default function EmployerActions({
                 { text: "Sağlık Durumu", style: "tableHeader" },
                 employer.healthCondition,
               ],
-              [{ text: "Çocuklar", style: "tableHeader" }, employer.children],
+              [
+                { text: "Çocuklar", style: "tableHeader" },
+                employer.children ? employer.children.toString() : "Yok", // Default value if empty
+              ],
               [{ text: "Kilo", style: "tableHeader" }, `${employer.weight} kg`],
             ],
           },
