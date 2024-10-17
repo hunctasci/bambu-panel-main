@@ -13,7 +13,7 @@ services:
       # - MONGO=mongodb+srv://hunctasci:9TVlJ53xhc9IJ7RM@cluster0.gcoe0.mongodb.net/dashboard?retryWrites=true&w=majority&appName=Cluster0
       - MONGO=mongodb://db:27017/dashboard
       - AUTH_SECRET=DxV1cpZMU8fY0TDQ/SyuNAauSMHzVo3a000fe+gD2RI=
-      - AUTH_URL=http://localhost:3000/api/auth
+      - AUTH_URL=http://bambupersonel.online/api/auth
 
     develop:
       watch:
@@ -36,3 +36,41 @@ services:
 
 volumes:
   database:
+
+
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGO=mongodb://bambuadmin:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/mydatabase
+      - AUTH_SECRET=DxV1cpZMU8fY0TDQ/SyuNAauSMHzVo3a000fe+gD2RI=
+      - AUTH_URL=http://bambupersonel.online/api/auth
+      - NEXT_PUBLIC_SAFE_KEY=my-public-safe-key-123456  # Replace with your public safe key
+    depends_on:
+      - db
+    networks:
+      - my_network
+
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=bambuadmin
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}  # This will be generated randomly in the setup script
+    volumes:
+      - database:/data/db
+    networks:
+      - my_network
+
+volumes:
+  database:
+
+networks:
+  my_network:
+    name: my_network
+    driver: bridge
