@@ -10,7 +10,7 @@ DOMAIN_NAME="bambupersonel.online"  # Your domain name
 EMAIL="hunc.tasci@gmail.com"  # Your email address
 
 # Script Vars
-REPO_URL="https://github.com/hunctasci/bambu-panel-main"
+REPO_URL="https://github.com/hunctasci/bambu-panel-main.git"
 APP_DIR=~/myapp
 
 
