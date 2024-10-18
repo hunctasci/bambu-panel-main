@@ -1,23 +1,32 @@
-# inherit from a existing image to add the functionality
-FROM node:20-alpine3.18
-
-# RUN addgroup app && adduser -S -G app app
-# USER app
-
-# Set the working directory and assign ownership to the non-root user
+# Stage 1: Base image with Node.js
+FROM node:18-alpine AS base
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files into the image.
-COPY package*.json ./
+# Stage 2: Install dependencies
+FROM base AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
 
-# Install the dependencies.
-RUN npm install
-
-# Copy the rest of the source files into the image.
+# Stage 3: Build the application
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npm run build
 
-# Expose the port that the application listens on.
+# Stage 4: Production server
+FROM node:18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Copy over necessary files from builder stage
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Expose the port Next.js uses
 EXPOSE 3000
 
-# Run the application.
-CMD npm run dev
+# Start the Next.js server in production mode
+CMD ["npm", "start"]
