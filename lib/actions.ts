@@ -185,6 +185,7 @@ export async function updateEmployee(formData: FormData) {
       // Upload the new photo as a Buffer
       const arrayBuffer = await photo.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
+      // @ts-expect-error error
       data.photo = buffer; // Update the photo field with the new Buffer
     }
 

@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const connectToDB = async () => {
   try {
-    const { connection } = await mongoose.connect(process.env.MONGO!);
+    const { connection } = await mongoose.connect(process.env.DATABASE_URL!);
     if (connection.readyState === 1) {
       return Promise.resolve(true);
     }

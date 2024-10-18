@@ -1,31 +1,22 @@
 #!/bin/bash
 
 # Env Vars
-MONGO_INITDB_ROOT_USERNAME="bambuadmin"  # Your MongoDB root username
-MONGO_INITDB_ROOT_PASSWORD=$(openssl rand -base64 12)  # Generate a random 12-character password
-MONGO_DB="mydatabase"  # Replace with your desired database name
+MONGO_USER="bambuadmin"  # Your MongoDB root username
+MONGO_PASSWORD=$(openssl rand -base64 12)  # Generate a random 12-character password
+MONGO_DB="dashboard"  # Replace with your desired database name
 SECRET_KEY="DxV1cpZMU8fY0TDQ/SyuNAauSMHzVo3a000fe+gD2RI="  # Your secret key
-NEXT_PUBLIC_SAFE_KEY="my-public-safe-key-123456"  # Replace with your public safe key
+AUTH_URL="http://bambupersonel.online/api/auth"
 DOMAIN_NAME="bambupersonel.online"  # Your domain name
 EMAIL="hunc.tasci@gmail.com"  # Your email address
 
 # Script Vars
-REPO_URL="https://github.com/leerob/next-self-host.git"
+REPO_URL="https://github.com/hunctasci/bambu-panel-main"
 APP_DIR=~/myapp
-SWAP_SIZE="1G"  # Swap size of 1GB
+
 
 # Update package list and upgrade existing packages
 sudo apt update && sudo apt upgrade -y
 
-# Add Swap Space
-echo "Adding swap space..."
-sudo fallocate -l $SWAP_SIZE /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-
-# Make swap permanent
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 # Install Docker
 sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
@@ -71,21 +62,21 @@ else
 fi
 
 # For Docker internal communication ("db" is the name of MongoDB container)
-DATABASE_URL="mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/$MONGO_DB"
+DATABASE_URL="mongodb://$MONGO_USER:$MONGO_PASSWORD@db:5432/$MONGO_DB"
 
 # For external tools
-DATABASE_URL_EXTERNAL="mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@localhost:27017/$MONGO_DB"
+DATABASE_URL_EXTERNAL="mongodb://$MONGO_USER:$MONGO_PASSWORD@localhost:5432/$MONGO_DB"
 
 # Create the .env file inside the app directory (~/myapp/.env)
-echo "MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME" > "$APP_DIR/.env"
-echo "MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD" >> "$APP_DIR/.env"
+echo "MONGO_USER=$MONGO_USER" > "$APP_DIR/.env"
+echo "MONGO_PASSWORD=$MONGO_PASSWORD" >> "$APP_DIR/.env"
 echo "MONGO_DB=$MONGO_DB" >> "$APP_DIR/.env"
 echo "DATABASE_URL=$DATABASE_URL" >> "$APP_DIR/.env"
 echo "DATABASE_URL_EXTERNAL=$DATABASE_URL_EXTERNAL" >> "$APP_DIR/.env"
 
 # These are just for the demo of env vars
 echo "SECRET_KEY=$SECRET_KEY" >> "$APP_DIR/.env"
-echo "NEXT_PUBLIC_SAFE_KEY=$NEXT_PUBLIC_SAFE_KEY" >> "$APP_DIR/.env"
+
 
 # Install Nginx
 sudo apt install nginx -y
@@ -170,10 +161,10 @@ echo "Deployment complete. Your Next.js app and MongoDB database are now running
 Next.js is available at https://$DOMAIN_NAME, and the MongoDB database is accessible from the web service.
 
 The .env file has been created with the following values:
-- MONGO_INITDB_ROOT_USERNAME
-- MONGO_INITDB_ROOT_PASSWORD (randomly generated)
+- MONGO_USER
+- MONGO_PASSWORD (randomly generated)
 - MONGO_DB
 - DATABASE_URL
 - DATABASE_URL_EXTERNAL
 - SECRET_KEY
-- NEXT_PUBLIC_SAFE_KEY"
+
