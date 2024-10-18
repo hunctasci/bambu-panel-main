@@ -13,10 +13,8 @@ EMAIL="hunc.tasci@gmail.com"  # Your email address
 REPO_URL="https://github.com/hunctasci/bambu-panel-main.git"
 APP_DIR=~/myapp
 
-
 # Update package list and upgrade existing packages
 sudo apt update && sudo apt upgrade -y
-
 
 # Install Docker
 sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
@@ -61,22 +59,12 @@ else
   cd $APP_DIR
 fi
 
-# For Docker internal communication ("db" is the name of MongoDB container)
-DATABASE_URL="mongodb://$MONGO_USER:$MONGO_PASSWORD@db:5432/$MONGO_DB"
-
-# For external tools
-DATABASE_URL_EXTERNAL="mongodb://$MONGO_USER:$MONGO_PASSWORD@localhost:5432/$MONGO_DB"
-
 # Create the .env file inside the app directory (~/myapp/.env)
-echo "MONGO_USER=$MONGO_USER" > "$APP_DIR/.env"
-echo "MONGO_PASSWORD=$MONGO_PASSWORD" >> "$APP_DIR/.env"
-echo "MONGO_DB=$MONGO_DB" >> "$APP_DIR/.env"
-echo "DATABASE_URL=$DATABASE_URL" >> "$APP_DIR/.env"
-echo "DATABASE_URL_EXTERNAL=$DATABASE_URL_EXTERNAL" >> "$APP_DIR/.env"
-
-# These are just for the demo of env vars
+echo "MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME" > "$APP_DIR/.env"
+echo "MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD" >> "$APP_DIR/.env"
+echo "MONGO_INITDB_DATABASE=$MONGO_INITDB_DATABASE" >> "$APP_DIR/.env"
+echo "DATABASE_URL=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/$MONGO_INITDB_DATABASE" >> "$APP_DIR/.env"
 echo "SECRET_KEY=$SECRET_KEY" >> "$APP_DIR/.env"
-
 
 # Install Nginx
 sudo apt install nginx -y
@@ -161,10 +149,8 @@ echo "Deployment complete. Your Next.js app and MongoDB database are now running
 Next.js is available at https://$DOMAIN_NAME, and the MongoDB database is accessible from the web service.
 
 The .env file has been created with the following values:
-- MONGO_USER
-- MONGO_PASSWORD (randomly generated)
+- MONGO_INITDB_ROOT_USERNAME
+- MONGO_INITDB_ROOT_PASSWORD (randomly generated)
 - MONGO_DB
 - DATABASE_URL
-- DATABASE_URL_EXTERNAL
 - SECRET_KEY
-
