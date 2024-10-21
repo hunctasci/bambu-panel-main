@@ -2,7 +2,7 @@
 
 # Env Vars
 MONGO_INITDB_ROOT_USERNAME="bambuadmin"  # Your MongoDB root username
-MONGO_INITDB_ROOT_PASSWORD=$(openssl rand -base64 12)  # Generate a random 12-character password
+MONGO_INITDB_ROOT_PASSWORD="wV3q4oONH6mM"  # Generate a random 12-character password
 MONGO_INITDB_DATABASE="dashboard"  # Replace with your desired database name
 SECRET_KEY="DxV1cpZMU8fY0TDQ/SyuNAauSMHzVo3a000fe+gD2RI="  # Your secret key
 AUTH_URL="http://bambupersonel.online/api/auth"
