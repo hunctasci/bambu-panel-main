@@ -9,27 +9,29 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-      - DATABASE_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/${MONGO_INITDB_DATABASE}
-      - SECRET_KEY=${SECRET_KEY}
-      - AUTH_URL=${AUTH_URL}
+      # - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      # - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      # - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      # - DATABASE_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/${MONGO_INITDB_DATABASE}
+      # - SECRET_KEY=${SECRET_KEY}
+      # - AUTH_URL=${AUTH_URL}
+      # - DOMAIN_NAME=${DOMAIN_NAME}
+      # - EMAIL=${EMAIL}
     depends_on:
       - db
     networks:
       - my_network
-    develop:
-      watch:
-        - path: ./package.json
-          action: rebuild
-        - path: ./next.config.js
-          action: rebuild
-        - path: ./package-lock.json
-          action: rebuild
-        - path: .
-          target: /app
-          action: sync
+    # develop:
+    #   watch:
+    #     - path: ./package.json
+    #       action: rebuild
+    #     - path: ./next.config.js
+    #       action: rebuild
+    #     - path: ./package-lock.json
+    #       action: rebuild
+    #     - path: .
+    #       target: /app
+    #       action: sync
 
   db:
     image: mongo
