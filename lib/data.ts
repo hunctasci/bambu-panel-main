@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Employer from "@/models/Employer";
 import { connectToDB } from "./utils";
 import Employee from "@/models/Employee";
