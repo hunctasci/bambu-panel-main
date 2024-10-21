@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import { z } from "zod";
 import type { UserType } from "@/lib/types";
+// @ts-ignore
 import bcrypt from "bcrypt";
 import { connectToDB } from "./lib/utils";
 import User from "./models/User";
