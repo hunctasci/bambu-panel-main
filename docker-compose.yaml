@@ -18,7 +18,8 @@ services:
       # - DOMAIN_NAME=${DOMAIN_NAME}
       # - EMAIL=${EMAIL}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - my_network
     # develop:
@@ -43,6 +44,13 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/${MONGO_INITDB_DATABASE} --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     networks:
       - my_network
 
