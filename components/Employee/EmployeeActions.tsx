@@ -25,6 +25,7 @@ export default function EmployeeActions({
   };
 
   const generatePdf = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const docDefinition: any = {
       content: [
         {
